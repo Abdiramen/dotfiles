@@ -1,0 +1,14 @@
+#!/bin/bash
+
+cp -rv ../bin ~/bin
+cp -v ~/.vimrc ~/.vimrc_old
+cp -v ../vimrc ~/.vimrc
+cp -v ../i3_config ~/.config/i3/config
+wget https://github.com/FortAwesome/Font-Awesome/archive/v4.7.0.tar.gz
+tar zxvf "v4.7.0.tar.gz"
+rm "v4.7.0.tar.gz"
+mkdir -p ~/fonts
+cp -r "Font-Awesome-4.7.0/fonts/fontawesome-webfont.ttf" ~/fonts/fontawesome-webfont.ttf
+
+./gaps
+echo -e "\033[0;31mReboot i3.\033[0m"
