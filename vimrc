@@ -1,86 +1,73 @@
-" Use Vim defaults (instead of vi)
+" Use VIM idefaults (instead of VI)
 set nocompatible
 set visualbell
-" Enable auto indentation
-" set cindent
-" Tabs are four spaces wide
-set shiftwidth=4
+set nomodeline
+
+" Tabs to spaces
+set shiftwidth=2
 set tabstop=2
 set expandtab
+
+set bs=2
 
 " Enable mouse support
 if has("mouse")
   set mouse=a
 endif
 
-
-" Language defualts
-autocmd Filetype cpp setlocal tabstop=2
-autocmd Filetype make setlocal noexpandtab
-autocmd Filetype go setlocal noexpandtab
-autocmd Filetype javascript setlocal tabstop=2
-autocmd Filetype latex setlocal tabstop=2
-autocmd Filetype html setlocal tabstop=2
-
-
-" Comfy mappings
-"" I don't like pressing SHIFT ; every time
-map ; :
-noremap ;; ;
-"" Copy to the + register
-map <F2> :%y + <CR>
-"" 80 column limit (wow old school)
-set colorcolumn=80
-
-" Visual ques
-"" Spell is hard
-set spell
-
-"" Show tab, spaces, and newlines
+" Show tab, space, and newlines
 set encoding=utf-8
-set list      " Show tabs and newlines
-set listchars=tab:▸\ ,eol:¬,trail:█,extends:>,precedes:< 
+set list " Show tabs and newlines
+set listchars=tab:▸\ ,eol:¬,trail:█,extends:>,precedes:<
 
-"" Under line
-set cursorline " hard to see with AnonymousPro font at size 9
-
-
-" A E S T H E T I C S
-
-"" Fallback font
-"set gfn=fontawesome
-"" Hyrid line numbers
+" Under line
+set cursorline
 set number relativenumber
 
-"" Syntax highlitighting
-syntax on
+" search
+set hlsearch
+
+"" Windows splits
+"set splitright
+
+"" Tags
+set tags=tags
 
 call plug#begin('~/.vim/bundle/')
-Plug 'ajmwagar/vim-deus'
-Plug 'dracula/vim'
-Plug 'posva/vim-vue'
-Plug 'w0rp/ale'
+" navigation
+Plug 'preservim/nerdtree' |
+            \ Plug 'Xuyuanp/nerdtree-git-plugin' |
+            "\ Plug 'ryanoasis/vim-devicons' " icons
+
+Plug 'dense-analysis/ale' " Linting and so much more
+Plug 'tpope/vim-fugitive' " git commands
+Plug 'airblade/vim-gitgutter'
+
+" Themes
+Plug 'challenger-deep-theme/vim', {'as': 'challenger' } " under water color scheme
+Plug 'dracula/vim', {'as': 'dracula'}
+Plug 'fenetikm/falcon'
+
+" Status line
 Plug 'itchyny/lightline.vim'
-Plug 'leafgarland/typescript-vim'
-Plug 'alvan/vim-closetag'
-cal  plug#end()
 
-filetype indent off
+" Syntax
+Plug 'cespare/vim-toml'
+Plug 'lifepillar/pgsql.vim'
+Plug 'LnL7/vim-nix'
 
-"" color-scheme and pretty colors
-colorscheme deus
-set background=dark
-set t_Co=256
-"colorscheme dracula
+" fuzzy finder
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+call plug#end()
 
-highlight Normal ctermbg=none
+"colorscheme falcon
+colorscheme challenger_deep
+"hi Normal guibg=NONE ctermbg=NONE
 
-"For lightline.vim
+let NERDTreeShowLineNumber=1
 set laststatus=2
 
-" Disable GHC linter if in a Haskell Stack project
-let g:ale_linters = {
-\    'haskell': ['ghc'],
-\}
-
-let g:ale_haskell_ghc_options = '-fno-code -v0 -dynamic'
+let g:ale_linters = {'c': ['clang'], 'c++': ['clang', 'g++']}
+let g:ale_cpp_gcc_options = '-Wall -O2 -std=c++17'
+let g:ale_cpp_clang_options = '-Wall -O2 -std=c++17'
