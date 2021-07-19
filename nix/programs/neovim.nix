@@ -44,6 +44,7 @@ in
       vim-nix
       fzf-vim
       vimwiki
+      mattn-calendar-vim
       {
         plugin = nerdtree;
         config = "let NERDTreeShowLineNumber=1";
@@ -54,8 +55,12 @@ in
     extraConfig = ''
       set visualbell
       set cursorline
+      set tabstop=2 shiftwidth=2 expandtab
       set number relativenumber
       set hlsearch
+      let mapleader = " "
+      filetype plugin on
+      syntax on
     '';
   };
 }
