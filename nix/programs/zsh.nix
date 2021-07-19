@@ -7,7 +7,9 @@
     enableSyntaxHighlighting = true;
     dotDir = ".config/zsh";
 
-    initExtra = "" + (builtins.readFile ./init-extra.zsh);
+    initExtra = ''
+      alias ls="ls --color"
+    '' + (builtins.readFile ./init-extra.zsh);
     plugins = with pkgs; [
       {
 	name = "zsh-vi-mode";
