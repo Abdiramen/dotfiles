@@ -1,5 +1,16 @@
 {pkgs, ... }:
 
+let
+  challenger_deep = pkgs.vimUtils.buildVimPlugin {
+    name = "challeger_deep";
+    src = pkgs.fetchFromGitHub {
+      owner = "challenger-deep-theme/";
+      repo = "vim";
+      rev = "b3109644b30f6a34279be7a7c9354360be207105";
+      sha256 = "1q3zjp9p5irkwmnz2c3fk8xrpivkwv1kc3y5kzf1sxdrbicbqda8";
+    };
+  };
+in
 {
   programs.neovim = {
     enable = true;
@@ -23,12 +34,10 @@
         config = "set laststatus=2";
       }
       {
-        plugin = vim-plug;
+        plugin = challenger_deep;
         config = "
-          call plug#begin('~/.vim/bundle/')
-            Plug 'challenger-deep-theme/vim', {'as': 'challenger' }
-          call plug#end()
           colorscheme challenger_deep
+          set termguicolors
         ";
       }
       vim-toml
