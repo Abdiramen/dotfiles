@@ -12,6 +12,7 @@
       alias ls="ls --color"
       alias vimiki="nvim -c VimwikiIndex"
       alias diary="nvim -c VimwikiDiaryIndex"
+      alias irb="irb --readline"
     '' + (builtins.readFile ./init-extra.zsh);
     plugins = with pkgs; [
       {
