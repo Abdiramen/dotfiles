@@ -1,6 +1,9 @@
 {pkgs, ... }:
 
 let
+  wiki_path = ~/vimwiki;
+  # NOTE: make a package to share common paths or variables
+  bin = ~/bin;
   challenger_deep = pkgs.vimUtils.buildVimPlugin {
     name = "challeger_deep";
     src = pkgs.fetchFromGitHub {
@@ -14,7 +17,6 @@ in
 {
   programs.neovim = {
     enable = true;
-
     viAlias = true;
     vimAlias = true;
 
@@ -43,7 +45,23 @@ in
       vim-toml
       vim-nix
       fzf-vim
-      vimwiki
+      {
+        plugin = vimwiki;
+        config = ''
+          let wiki_1 = {}
+          let wiki_1.name = 'base'
+          let wiki_1.path = '${toString wiki_path}'
+          let wiki_1.auto_tags = 1
+
+          let wiki_2 = {}
+          let wiki_2.name = 'test'
+          let wiki_2.path = '~/testwiki'
+          let wiki_2.auto_tags = 1
+
+          let g:vimwiki_list = [wiki_1, wiki_2]
+          "let g:vimwiki_folding = 'syntax'
+        '';
+      }
       mattn-calendar-vim
       {
         plugin = nerdtree;
@@ -58,6 +76,7 @@ in
       set tabstop=2 shiftwidth=2 expandtab
       set number relativenumber
       set hlsearch
+      set splitright
       let mapleader = " "
       filetype plugin on
       syntax on
@@ -81,6 +100,9 @@ in
           return 1
         endif
       endfunction
+
+      " vimwiki template
+      au BufNewFile ${toString wiki_path}/diary/*.wiki :silent 0r !${toString bin}/nvim/generate-vimwiki-diary-template.py '%'
     '';
   };
 }

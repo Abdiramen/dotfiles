@@ -13,6 +13,10 @@
       alias vimiki="nvim -c VimwikiIndex"
       alias diary="nvim -c VimwikiDiaryIndex"
       alias irb="irb --readline"
+      alias emacs="emacs --no-window-system"
+
+      # turning off translations for Stardew Valley
+      export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
     '' + (builtins.readFile ./init-extra.zsh);
     plugins = with pkgs; [
       {
@@ -32,6 +36,26 @@
 	        repo   = "powerlevel10k";
 	        rev    = "v1.15.0";
 	        sha256 = "1b3j2riainx3zz4irww72z0pb8l8ymnh1903zpsy5wmjgb0wkcwq";
+        };
+      }
+      {
+        name = "zsh-nix-shell";
+        file = "nix-shell.plugin.zsh";
+        src = pkgs.fetchFromGitHub {
+          owner = "chisui";
+          repo = "zsh-nix-shell";
+          rev = "v0.5.0";
+          sha256 = "0za4aiwwrlawnia4f29msk822rj9bgcygw6a8a6iikiwzjjz0g91";
+        };
+      }
+      {
+        name = "nix-zsh-completions";
+        file = "nix-zsh-completions.plugin.zsh";
+        src = pkgs.fetchFromGitHub {
+          owner = "spwhitt";
+          repo = "nix-zsh-completions";
+          rev = "0.4.4";
+          sha256 = "1n9whlys95k4wc57cnz3n07p7zpkv796qkmn68a50ygkx6h3afqf";
         };
       }
     ];
