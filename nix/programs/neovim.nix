@@ -102,7 +102,7 @@ in
       endfunction
 
       " vimwiki template
-      au BufNewFile ${toString wiki_path}/diary/*.wiki :silent 0r !${toString bin}/nvim/generate-vimwiki-diary-template.py '%'
+      au BufNewFile ${toString wiki_path}/diary/*.wiki :silent 0r !${toString bin}/nvim/generate-vimwiki-diary-template.py ${toString wiki_path}
     '';
   };
 }
