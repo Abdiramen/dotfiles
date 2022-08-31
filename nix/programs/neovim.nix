@@ -20,7 +20,18 @@ in
     viAlias = true;
     vimAlias = true;
 
-    plugins = with pkgs.vimPlugins; [
+    plugins = with pkgs.vimPlugins;
+    let
+      vimwiki = pkgs.vimUtils.buildVimPlugin {
+      name = "vimwiki";
+      src = pkgs.fetchFromGitHub {
+        owner = "Abdirahman";
+        repo = "vimwiki";
+        rev = "c8f858e57c3a1f60ab9010b0518729bd812d5231";
+        sha256 = "H411nKLTS+BWnd3ksgKYlXMx56qt1JV/meRVcfJ9ioI=";
+      };
+    };
+    in [
       {
         plugin = ale;
         config = "
