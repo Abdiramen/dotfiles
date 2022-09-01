@@ -14,8 +14,9 @@ template = """= {date} =
 {file_link}
 
 == Daily checklist ==
-- [ ] review interview doc: [[vfile:/home/vimto/git/interviews/notes/interviews.md]]
-- [ ] review algo/ds basics: [[vfile:/home/vimto/git/interviews/notes/ds_algos/todo.md]]
+
+- [ ] review interview doc: [[wiki1:index]]
+- [ ] review algo/ds basics: [[wiki1:/algos/index]]
 - [ ] Note what was completed since the last entry
 
 == Todo ==

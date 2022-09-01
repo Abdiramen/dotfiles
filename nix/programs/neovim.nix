@@ -1,7 +1,9 @@
 {pkgs, ... }:
 
 let
-  wiki_path = ~/vimwiki;
+  wiki_0_path = ~/vimwiki;
+  wiki_1_path = ~/git/interviews;
+  wiki_path_html = ~/vimwiki_html;
   # NOTE: make a package to share common paths or variables
   bin = ~/bin;
   challenger_deep = pkgs.vimUtils.buildVimPlugin {
@@ -13,25 +15,22 @@ let
       sha256 = "1q3zjp9p5irkwmnz2c3fk8xrpivkwv1kc3y5kzf1sxdrbicbqda8";
     };
   };
+  vimwiki = pkgs.vimUtils.buildVimPlugin {
+    name = "vimwiki";
+    src = pkgs.fetchFromGitHub {
+      owner = "Abdirahman";
+      repo = "vimwiki";
+      rev = "c8f858e57c3a1f60ab9010b0518729bd812d5231";
+      sha256 = "H411nKLTS+BWnd3ksgKYlXMx56qt1JV/meRVcfJ9ioI=";
+    };
+  };
 in
 {
   programs.neovim = {
     enable = true;
     viAlias = true;
     vimAlias = true;
-
-    plugins = with pkgs.vimPlugins;
-    let
-      vimwiki = pkgs.vimUtils.buildVimPlugin {
-      name = "vimwiki";
-      src = pkgs.fetchFromGitHub {
-        owner = "Abdirahman";
-        repo = "vimwiki";
-        rev = "c8f858e57c3a1f60ab9010b0518729bd812d5231";
-        sha256 = "H411nKLTS+BWnd3ksgKYlXMx56qt1JV/meRVcfJ9ioI=";
-      };
-    };
-    in [
+    plugins = with pkgs.vimPlugins;[
       {
         plugin = ale;
         config = "
@@ -59,17 +58,19 @@ in
       {
         plugin = vimwiki;
         config = ''
+          let wiki_0 = {}
+          let wiki_0.name = 'base'
+          let wiki_0.path = '${toString wiki_0_path}'
+          let wiki_0.path_html = '${toString wiki_path_html}'
+          let wiki_0.auto_tags = 1
+
           let wiki_1 = {}
-          let wiki_1.name = 'base'
-          let wiki_1.path = '${toString wiki_path}'
+          let wiki_1.name = 'interviews'
+          let wiki_1.path = '${toString wiki_1_path}'
+          let wiki_1.path_html = '${toString wiki_path_html}'
           let wiki_1.auto_tags = 1
 
-          let wiki_2 = {}
-          let wiki_2.name = 'test'
-          let wiki_2.path = '~/testwiki'
-          let wiki_2.auto_tags = 1
-
-          let g:vimwiki_list = [wiki_1, wiki_2]
+          let g:vimwiki_list = [wiki_0, wiki_1]
           "let g:vimwiki_folding = 'syntax'
         '';
       }
@@ -113,7 +114,7 @@ in
       endfunction
 
       " vimwiki template
-      au BufNewFile ${toString wiki_path}/diary/*.wiki :silent 0r !${toString bin}/nvim/generate-vimwiki-diary-template.py ${toString wiki_path}
+      au BufNewFile ${toString wiki_0_path}/diary/*.wiki :silent 0r !${toString bin}/nvim/generate-vimwiki-diary-template.py ${toString wiki_0_path}
     '';
   };
 }
