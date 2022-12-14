@@ -10,7 +10,7 @@
 
     initExtra = ''
       alias ls="ls --color"
-      alias vimiki="nvim -c VimwikiIndex"
+      alias vimwiki="nvim -c VimwikiIndex"
       alias diary="nvim -c VimwikiDiaryIndex"
       alias irb="irb --readline"
       alias emacs="emacs --no-window-system"

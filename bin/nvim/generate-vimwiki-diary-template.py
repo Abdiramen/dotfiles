@@ -11,10 +11,10 @@ arg_parser.add_argument("wiki_path")
 args = arg_parser.parse_args()
 
 template = """= {date} =
-{file_link}
+{index_link}
+{previous_link}
 
 == Daily checklist ==
-
 - [ ] review interview doc: [[wiki1:index]]
 - [ ] review algo/ds basics: [[wiki1:/algos/index]]
 - [ ] Note what was completed since the last entry
@@ -29,7 +29,8 @@ date = datetime.date.today()
 dir_path = args.wiki_path + '/diary/'
 files = filter(os.path.isfile, glob.glob(dir_path + '*'))
 # fallback to diary index file
-file_link = "[[diary.wiki|diary index]]"
+index_link = "[[diary.wiki|diary index]]"
+previous_link = ""
 
 if files:
     # sort files by time created acending
@@ -42,7 +43,7 @@ if files:
     files = [s for s in files if reg_parser.match(s)]
     # Gets last diary entry
     file = files.pop()
-    file_link = f"[[{file}|previous entry]]"
+    previous_link = f"[[{file}|previous entry]]"
    
 # Generate wiki file content
-print(template.format(date=date, file_link=file_link))
+print(template.format(date=date, previous_link=previous_link, index_link=index_link))
