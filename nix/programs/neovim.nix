@@ -146,6 +146,7 @@ in
         plugin = null-ls-nvim;
       }
       {
+        # Diagnostics
         plugin = trouble-nvim;
         type = "lua";
         config = ''
@@ -158,30 +159,33 @@ in
         plugin = nvim-lspconfig;
         type = "lua";
         config = ''
+          local on_attach = function(client, bufnr)
+            local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+            local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
+            vim.keymap.set("n", "K", vim.lsp.buf.hover)
+            vim.keymap.set("n", "gd", vim.lsp.buf.definition)
+            vim.keymap.set("n", "gt", vim.lsp.buf.type_definition)
+            vim.keymap.set("n", "gi", vim.lsp.buf.implementation)
+            vim.keymap.set("n", "<leader>dj", vim.diagnostic.goto_next)
+            vim.keymap.set("n", "<leader>dk", vim.diagnostic.goto_prev)
+            vim.keymap.set("n", "<leader>dl", "<cmd>Telescope diagnostics<cr>")
+            vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename)
+          end
+
           require('lspconfig').gopls.setup{
             capabilities = capabilities,
             on_attach = function()
-            vim.keymap.set("n", "K", vim.lsp.buf.hover, {buffer=0})
-            vim.keymap.set("n", "gd", vim.lsp.buf.definition, {buffer=0})
-            vim.keymap.set("n", "gt", vim.lsp.buf.type_definition, {buffer=0})
-            vim.keymap.set("n", "gi", vim.lsp.buf.implementation, {buffer=0})
-            vim.keymap.set("n", "<leader>dj", vim.diagnostic.goto_next, {buffer=0})
-            vim.keymap.set("n", "<leader>dk", vim.diagnostic.goto_prev, {buffer=0})
-            vim.keymap.set("n", "<leader>dl", "<cmd>Telescope diagnostics<cr>", {buffer=0})
-            vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, {buffer=0})
             end,
           }
           require('lspconfig').rust_analyzer.setup{
             capabilities = capabilities,
             on_attach = function()
-            vim.keymap.set("n", "K", vim.lsp.buf.hover, {buffer=0})
-            vim.keymap.set("n", "gd", vim.lsp.buf.definition, {buffer=0})
-            vim.keymap.set("n", "gt", vim.lsp.buf.type_definition, {buffer=0})
-            vim.keymap.set("n", "gi", vim.lsp.buf.implementation, {buffer=0})
-            vim.keymap.set("n", "<leader>dj", vim.diagnostic.goto_next, {buffer=0})
-            vim.keymap.set("n", "<leader>dk", vim.diagnostic.goto_prev, {buffer=0})
-            vim.keymap.set("n", "<leader>dl", "<cmd>Telescope diagnostics<cr>", {buffer=0})
-            vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, {buffer=0})
+            end,
+          }
+          require('lspconfig').solargraph.setup {
+            capabilities = capabilities,
+            on_attach = function()
             end,
           }
         '';
@@ -256,6 +260,8 @@ in
       gopls
       ## Rust
       rust-analyzer
+      ## ruby
+      solargraph
     ];
 
     extraConfig = ''

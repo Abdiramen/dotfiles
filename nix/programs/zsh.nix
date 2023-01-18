@@ -1,5 +1,8 @@
 {pkgs, ... }:
 
+let
+  bin = ~/bin;
+in
 {
   programs.dircolors = {
     enable = true;
@@ -27,6 +30,7 @@
       alias diary="nvim -c VimwikiDiaryIndex"
       alias irb="irb --readline"
       alias emacs="emacs --no-window-system"
+      alias mkgit="${toString bin}/builders/mkgit.rb"
 
       # turning off translations for Stardew Valley
       export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
