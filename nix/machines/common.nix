@@ -20,5 +20,6 @@
     ripgrep
 
     ngrok
+    emacs
   ];
 }

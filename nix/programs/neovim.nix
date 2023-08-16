@@ -6,6 +6,15 @@ let
   wiki_path_html = ~/vimwiki_html;
   # NOTE: make a package to share common paths or variables
   bin = ~/bin;
+  nvim_prettier = pkgs.vimUtils.buildVimPlugin {
+    name = "nvim_prettier";
+    src = pkgs.fetchFromGitHub {
+      owner = "MunifTanjim";
+      repo = "prettier.nvim";
+      rev = "d98e732cb73690b07c00c839c924be1d1d9ac5c2";
+      sha256 = "4xq+caprcQQotvBXnWWSsMwVB2hc5uyjrhT1dPBffXI=";
+    };
+  };
 in
 {
   programs.neovim = {
@@ -97,34 +106,34 @@ in
           vim.cmd.colorscheme "catppuccin"
           '';
       }
-      {
-        plugin = gruvbox-nvim;
-        type = "lua";
-        config = ''
-          vim.o.background = "dark"
-          require("gruvbox").setup({
-            undercurl = true,
-            underline = true,
-            bold = true,
-            italic = true,
-            strikethrough = true,
-            invert_selection = false,
-            invert_signs = false,
-            invert_tabline = false,
-            invert_intend_guides = false,
-            inverse = true, -- invert background for search, diffs, statuslines and errors
-            contrast = "", -- can be "hard", "soft" or empty string
-            palette_overrides = {},
-            overrides = {},
-            dim_inactive = false,
-            transparent_mode = false,
-          })
-          -- vim.cmd([[colorscheme gruvbox]])
-        '';
-      }
-      {
-        plugin = tokyonight-nvim;
-      }
+      #{
+      #  plugin = gruvbox-nvim;
+      #  type = "lua";
+      #  config = ''
+      #    vim.o.background = "dark"
+      #    require("gruvbox").setup({
+      #      undercurl = true,
+      #      underline = true,
+      #      bold = true,
+      #      italic = true,
+      #      strikethrough = true,
+      #      invert_selection = false,
+      #      invert_signs = false,
+      #      invert_tabline = false,
+      #      invert_intend_guides = false,
+      #      inverse = true, -- invert background for search, diffs, statuslines and errors
+      #      contrast = "", -- can be "hard", "soft" or empty string
+      #      palette_overrides = {},
+      #      overrides = {},
+      #      dim_inactive = false,
+      #      transparent_mode = false,
+      #    })
+      #    -- vim.cmd([[colorscheme gruvbox]])
+      #  '';
+      #}
+      #{
+      #  plugin = tokyonight-nvim;
+      #}
       ## Statusline
       {
         plugin = lualine-nvim;
@@ -140,10 +149,15 @@ in
       {
         # Extendable fuzzy finder over lists aka vim-fzf replacement
         plugin = telescope-nvim;
-      }
-      {
-        # Diagnostics, code actions, and more using neovim directly
-        plugin = null-ls-nvim;
+        type = "lua";
+        config = ''
+          local builtin = require('telescope.builtin')
+          vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
+          vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
+          vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
+          vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
+          vim.keymap.set('n', '<leader>fk', builtin.keymaps, {})
+          '';
       }
       {
         # Diagnostics
@@ -159,36 +173,70 @@ in
         plugin = nvim-lspconfig;
         type = "lua";
         config = ''
+          local group = vim.api.nvim_create_augroup("lsp_format_on_save", { clear = false })
+          local event = "BufWritePre"
+          local async = event == "BufWritePost"
+
           local on_attach = function(client, bufnr)
             local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
             local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
             vim.keymap.set("n", "K", vim.lsp.buf.hover)
             vim.keymap.set("n", "gd", vim.lsp.buf.definition)
-            vim.keymap.set("n", "gt", vim.lsp.buf.type_definition)
+            vim.keymap.set("n", "gD", vim.lsp.buf.declaration)
+            vim.keymap.set("n", "<leader>gt", vim.lsp.buf.type_definition)
             vim.keymap.set("n", "gi", vim.lsp.buf.implementation)
             vim.keymap.set("n", "<leader>dj", vim.diagnostic.goto_next)
             vim.keymap.set("n", "<leader>dk", vim.diagnostic.goto_prev)
             vim.keymap.set("n", "<leader>dl", "<cmd>Telescope diagnostics<cr>")
             vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename)
+
+            ---- formatting
+            --if client.supports_method("textDocument/formatting") then
+            --  vim.keymap.set("n", "<Leader>f", function()
+            --    vim.lsp.buf.format({ bufnr = vim.api.nvim_get_current_buf() })
+            --  end, { buffer = bufnr, desc = "[lsp] format" })
+
+            --  vim.keymap.set("x", "<Leader>f", function()
+            --    vim.lsp.buf.format({ bufnr = vim.api.nvim_get_current_buf() })
+            --  end, { buffer = bufnr, desc = "[lsp] format" })
+
+            --  -- format on save
+            --  vim.api.nvim_create_autocmd("BufWritePre", {
+            --    buffer = bufnr,
+            --    group = group,
+            --    callback = function()
+            --      vim.lsp.buf.format({ bufnr = bufnr, async = async })
+            --    end
+            --  })
+            --end
           end
 
           require('lspconfig').gopls.setup{
             capabilities = capabilities,
-            on_attach = function()
-            end,
+            on_attach = on_attach,
           }
           require('lspconfig').rust_analyzer.setup{
             capabilities = capabilities,
-            on_attach = function()
-            end,
+            on_attach = on_attach,
           }
           require('lspconfig').solargraph.setup {
             capabilities = capabilities,
-            on_attach = function()
-            end,
+            on_attach = on_attach,
           }
-        '';
+
+          require('lspconfig').tsserver.setup {
+            capabilities = capabilities,
+            on_attach = on_attach,
+            filetypes = { "typescript", "typescriptreact", "typescript.tsx" },
+            cmd = { "typescript-language-server", "--stdio" }
+          }
+
+          require('lspconfig').bufls.setup {
+            capabilities = capabilities,
+            on_attach = on_attach,
+          }
+          '';
       }
       ## nvim cmp and additions
       {
@@ -251,6 +299,68 @@ in
         plugin = cmp-nvim-lsp;
         type = "lua";
       }
+      {
+        # Diagnostics, code actions, and more using neovim directly
+        plugin = null-ls-nvim;
+        type = "lua";
+        config = ''
+          -- local null_ls = require("null-ls")
+
+          -- null_ls.setup({
+          --   on_attach = on_attach,
+          --   sources = {
+          --     null_ls.builtins.formatting.prettier,
+          --   },
+          -- })
+        '';
+      }
+      {
+        plugin = nvim_prettier;
+        type = "lua";
+        config = ''
+          local prettier = require("prettier")
+
+          prettier.setup({
+            bin = 'prettier', -- or `'prettierd'` (v0.23.3+)
+            filetypes = {
+              "css",
+              "graphql",
+              "html",
+              "javascript",
+              "javascriptreact",
+              "json",
+              "less",
+              "markdown",
+              "scss",
+              "typescript",
+              "typescriptreact",
+              "yaml",
+            },
+            cli_options = {
+              arrow_parens = "always",
+              -- plugins: [require("prettier-plugin-tailwindcss")],
+              semi = true,
+              single_quote = false,
+              tab_width = 2,
+              trailingComma = "es5",
+              use_tabs = true,
+            },
+            ["null-ls"] = {
+              condition = function()
+                return prettier.config_exists({
+                  -- if `false`, skips checking `package.json` for `"prettier"` key
+                  check_package_json = true,
+                })
+              end,
+              runtime_condition = function(params)
+                -- return false to skip running prettier
+                return true
+              end,
+              timeout = 5000,
+            }
+          })
+          '';
+      }
       luasnip
       cmp_luasnip
     ];
@@ -258,10 +368,15 @@ in
       # language servers
       ## Go
       gopls
+      ### protobuf (buf)
+      buf-language-server
       ## Rust
       rust-analyzer
       ## ruby
       solargraph
+      ## typescript
+      nodePackages_latest.typescript-language-server
+      nodePackages_latest.prettier # needed for correct prettier formatting 
     ];
 
     extraConfig = ''
