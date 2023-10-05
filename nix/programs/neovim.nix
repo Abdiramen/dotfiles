@@ -29,7 +29,6 @@ in
       gitgutter
       vim-toml
       vim-nix
-      nerdtree-git-plugin
       # wiki, note taking productivity tools
       {
         # Personl wiki for vim
@@ -134,6 +133,7 @@ in
       #{
       #  plugin = tokyonight-nvim;
       #}
+
       ## Statusline
       {
         plugin = lualine-nvim;
@@ -376,7 +376,7 @@ in
       solargraph
       ## typescript
       nodePackages_latest.typescript-language-server
-      nodePackages_latest.prettier # needed for correct prettier formatting 
+      #nodePackages_latest.prettier # needed for correct prettier formatting
     ];
 
     extraConfig = ''
