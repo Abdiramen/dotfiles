@@ -12,6 +12,7 @@
       local SOLID_LEFT_ARROW = utf8.char(0xe0b2)
       -- The filled in variant of the > symbol
       local SOLID_RIGHT_ARROW = utf8.char(0xe0b0)
+      local config = wezterm.config_builder()
 
       wezterm.on(
         'format-tab-title',
@@ -47,64 +48,73 @@
           }
         end
       )
-
-      return {
-        -- hide_tab_bar_if_only_one_tab = true,
-        use_fancy_tab_bar = false,
-        tab_bar_at_bottom = true,
-        harfbuzz_features = { 'calt=0', 'clig=0', 'liga=0'},
-        font_size = 10,
-        color_scheme = "AlienBlood",
-        window_background_opacity = 0.5,
-        window_padding = {
-          left = 0,
-          right = 0,
-          top = 0,
-          bottom = 0,
+      -- hide_tab_bar_if_only_one_tab = true,
+      config.use_fancy_tab_bar = false
+      config.tab_bar_at_bottom = true
+      config.harfbuzz_features = { 'calt=0', 'clig=0', 'liga=0'}
+      config.font_size = 10
+      config.color_scheme = "AlienBlood"
+      config.window_background_opacity = 1
+      config.window_padding = {
+        left = 0,
+        right = 0,
+        top = 0,
+        bottom = 0,
+      }
+      config.inactive_pane_hsb = {
+        saturation = 0.5,
+        brightness = 0.5,
+      }
+      config.keys = {
+        {
+          key = '"',
+          mods = 'CTRL|SHIFT',
+          action = act.SplitVertical { domain = 'CurrentPaneDomain' },
         },
-        inactive_pane_hsb = {
-          saturation = 0.5,
-          brightness = 0.5,
+        {
+          key = '%',
+          mods = 'CTRL|SHIFT',
+          action = act.SplitHorizontal { domain = 'CurrentPaneDomain' },
         },
-        keys = {
-          {
-            key = '"',
-            mods = 'CTRL|SHIFT',
-            action = act.SplitVertical { domain = 'CurrentPaneDomain' },
-          },
-          {
-            key = '%',
-            mods = 'CTRL|SHIFT',
-            action = act.SplitHorizontal { domain = 'CurrentPaneDomain' },
-          },
-          {
-            key = 'l',
-            mods = "CTRL|SHIFT|ALT",
-            action = act.ShowDebugOverlay,
-          },
-          -- vim movements
-          {
-            key = 'h',
-            mods = 'CTRL|SHIFT',
-            action = act.ActivatePaneDirection 'Left',
-          },
-          {
-            key = 'j',
-            mods = 'CTRL|SHIFT',
-            action = act.ActivatePaneDirection 'Down',
-          },
-          {
-            key = 'k',
-            mods = 'CTRL|SHIFT',
-            action = act.ActivatePaneDirection 'Up',
-          },
-          {
-            key = 'l',
-            mods = 'CTRL|SHIFT',
-            action = act.ActivatePaneDirection 'Right',
-          },
+        {
+          key = 'l',
+          mods = "CTRL|SHIFT|ALT",
+          action = act.ShowDebugOverlay,
+        },
+        -- vim movements
+        {
+          key = 'h',
+          mods = 'CTRL|SHIFT',
+          action = act.ActivatePaneDirection 'Left',
+        },
+        {
+          key = 'j',
+          mods = 'CTRL|SHIFT',
+          action = act.ActivatePaneDirection 'Down',
+        },
+        {
+          key = 'k',
+          mods = 'CTRL|SHIFT',
+          action = act.ActivatePaneDirection 'Up',
+        },
+        {
+          key = 'l',
+          mods = 'CTRL|SHIFT',
+          action = act.ActivatePaneDirection 'Right',
+        },
+        {
+          key = 'b',
+          mods = 'CTRL|SHIFT',
+          action = act.RotatePanes 'CounterClockwise',
+        },
+        {
+          key = 'b',
+          mods = 'CTRL|SHIFT|ALT',
+          action = act.RotatePanes 'Clockwise'
         },
       }
+
+      return config
     '';
   };
 }

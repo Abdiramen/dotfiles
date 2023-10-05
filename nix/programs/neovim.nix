@@ -21,6 +21,7 @@ in
     enable = true;
     viAlias = true;
     vimAlias = true;
+    defaultEditor = true;
 
     # to find plugins run:
     # nix-env -f '<nixpkgs>' -qaP -A vimPlugins
@@ -133,7 +134,6 @@ in
       #{
       #  plugin = tokyonight-nvim;
       #}
-
       ## Statusline
       {
         plugin = lualine-nvim;
@@ -391,5 +391,10 @@ in
       filetype plugin on
       syntax on      
     '';
+
+    extraLuaConfig = ''
+      vim.opt.clipboard = 'unnamedplus'
+      '';
   };
+
 }
