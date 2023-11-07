@@ -8,6 +8,7 @@
     ~/nix/programs/fzf.nix
     ~/nix/programs/neovim.nix
     ~/nix/programs/go.nix
+    ~/nix/programs/direnv.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
@@ -19,8 +20,8 @@
     git
     graphite-cli
     ripgrep
+    jq
 
     ngrok
-    #emacs
   ];
 }

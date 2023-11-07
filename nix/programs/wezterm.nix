@@ -113,6 +113,14 @@
           action = act.RotatePanes 'Clockwise'
         },
       }
+      config.ssh_domains = {
+        {
+          name = 'ngrok',
+          remote_address = 'ngrok-ec2',
+          username = 'ubuntu',
+          remote_wezterm_path = '/home/ubuntu/.nix-profile/bin/wezterm',
+        },
+      }
 
       return config
     '';

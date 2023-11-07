@@ -3,5 +3,6 @@
 {
   imports = [
     ../common.nix
+    ../../programs/wezterm.nix
   ];
 }

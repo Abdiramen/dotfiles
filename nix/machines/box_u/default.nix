@@ -3,6 +3,7 @@
 {
   imports = [
     ../common.nix
+    ../../programs/direnv.nix
   ];
 
   # allow home manager to manage shell
@@ -34,4 +35,8 @@
   programs.zsh.initExtra = ''
     alias wezterm="flatpak run org.wezfurlong.wezterm"
     '';
+
+  home.packages = with pkgs; [
+    _1password-gui
+  ]
 }
