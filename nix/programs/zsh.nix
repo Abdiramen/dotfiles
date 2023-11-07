@@ -33,9 +33,16 @@ in
       alias irb="irb --readline"
       alias emacs="emacs --no-window-system"
       alias mkgit="${toString bin}/builders/mkgit.rb"
+      alias pn="pnpm"
 
       # turning off translations for Stardew Valley
       export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
+
+      if [ -f "''${HOME}/ngrok/.cache/ngrok-host-shellhook" ]; then
+        source "''${HOME}/ngrok/.cache/ngrok-host-shellhook"
+      elif command -v direnv 2>&1 >/dev/null ; then
+        source <(direnv hook zsh)
+      fi
     '';
     plugins = with pkgs; [
       {

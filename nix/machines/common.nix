@@ -17,9 +17,10 @@
     tmux
     bat
     git
+    graphite-cli
     ripgrep
 
     ngrok
-    emacs
+    #emacs
   ];
 }
