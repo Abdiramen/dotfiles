@@ -3,6 +3,11 @@
 {
   imports = [
     ../common.nix
-    ../../programs/wezterm.nix
+    ../../programs/direnv.nix
+    ../../desktop
+  ];
+
+  home.packages = with pkgs; [
+    _1password-gui
   ];
 }

@@ -3,7 +3,7 @@
 {
   imports = [
     ../common.nix
-    ../../programs/wezterm-remote.nix
+    ../../remote
   ];
 
   # allow home manager to manage shell

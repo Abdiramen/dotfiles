@@ -4,6 +4,7 @@
   imports = [
     ../common.nix
     ../../programs/direnv.nix
+    ../../desktop
   ];
 
   # allow home manager to manage shell

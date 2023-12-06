@@ -2,7 +2,6 @@
 
 {
   imports = [
-    #~/nix/programs/wezterm.nix
     ~/nix/programs/zsh.nix
     ~/nix/programs/tmux.nix
     ~/nix/programs/fzf.nix
