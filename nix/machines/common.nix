@@ -20,6 +20,7 @@
     graphite-cli
     ripgrep
     jq
+    bc
 
     ngrok
   ];
