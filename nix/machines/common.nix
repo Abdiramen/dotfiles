@@ -2,12 +2,8 @@
 
 {
   imports = [
-    ~/nix/programs/zsh.nix
-    ~/nix/programs/tmux.nix
-    ~/nix/programs/fzf.nix
-    ~/nix/programs/neovim.nix
-    ~/nix/programs/go.nix
-    ~/nix/programs/direnv.nix
+    ../programs
+    ../langs
   ];
 
   nixpkgs.config.allowUnfree = true;
