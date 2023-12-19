@@ -27,7 +27,21 @@ in {
         "${mod}+Shift+j" = "move down";
         "${mod}+Shift+k" = "move up";
         "${mod}+Shift+l" = "move right";
+
+        # Browser
+        "${mod}+b" = "exec firefox";
       };
+
+      workspaceOutputAssign = [
+        {
+          workspace = "1";
+          output = "DP-3";
+        }
+        {
+          workspace = "2";
+          output = "HDMI-1";
+        }
+      ];
 
       bars = [
         {
