@@ -26,15 +26,16 @@ in
     defaultKeymap = "viins";
     dotDir = ".config/zsh";
 
+    shellAliases = {
+      ls = "ls --color";
+      "vimwiki" = "nvim -c VimwikiIndex";
+      "diary" = "nvim -c VimwikiDiaryIndex";
+      "irb" = "irb --readline";
+      "emacs" = "emacs --no-window-system";
+      "mkgit" = "${toString bin}/builders/mkgit.rb";
+      "pn" = "pnpm";
+    };
     initExtra = ''
-      alias ls="ls --color"
-      alias vimwiki="nvim -c VimwikiIndex"
-      alias diary="nvim -c VimwikiDiaryIndex"
-      alias irb="irb --readline"
-      alias emacs="emacs --no-window-system"
-      alias mkgit="${toString bin}/builders/mkgit.rb"
-      alias pn="pnpm"
-
       # turning off translations for Stardew Valley
       export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
 

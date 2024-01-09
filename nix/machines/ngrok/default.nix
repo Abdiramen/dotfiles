@@ -18,6 +18,11 @@
       exec ~/.nix-profile/bin/zsh
     '';
   };
+
+  programs.zsh.shellAliases = {
+    "enable_sso" = "export NGROK_USE_SSO=true && direnv reload";
+    "disable_sso" = "export NGROK_USE_SSO=false && direnv reload";
+  };
   home.packages = with pkgs; [
     graphite-cli
   ];
