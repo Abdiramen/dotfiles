@@ -159,11 +159,18 @@ in
         type = "lua";
         config = ''
           local builtin = require('telescope.builtin')
+          -- find files
           vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
+          -- find a pattern
           vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
+          -- find a buffer from buffer list
           vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
+          -- search through all help tags
           vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
+          -- find a keymapping
           vim.keymap.set('n', '<leader>fk', builtin.keymaps, {})
+          -- list all vim bookmarks!
+          vim.keymap.set('n', '<leader>fm', builtin.marks, {})
           '';
       }
       {
@@ -197,6 +204,10 @@ in
             vim.keymap.set("n", "<leader>dk", vim.diagnostic.goto_prev)
             vim.keymap.set("n", "<leader>dl", "<cmd>Telescope diagnostics<cr>")
             vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename)
+            vim.keymap.set("n", "<leader>df", function()
+              vim.lsp.buf.format { async = true }
+            end, opts)
+            vim.keymap.set("n", "gr", vim.lsp.buf.references)
 
             ---- formatting
             --if client.supports_method("textDocument/formatting") then
