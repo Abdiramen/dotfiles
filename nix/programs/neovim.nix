@@ -197,6 +197,7 @@ in
 
             vim.keymap.set("n", "K", vim.lsp.buf.hover)
             vim.keymap.set("n", "gd", vim.lsp.buf.definition)
+            vim.keymap.set("n", "gr", vim.lsp.buf.references)
             vim.keymap.set("n", "gD", vim.lsp.buf.declaration)
             vim.keymap.set("n", "<leader>gt", vim.lsp.buf.type_definition)
             vim.keymap.set("n", "gi", vim.lsp.buf.implementation)
@@ -231,6 +232,19 @@ in
           end
 
           require('lspconfig').gopls.setup{
+            capabilities = capabilities,
+            on_attach = on_attach,
+            --inlay_hints = {
+            --  assignVariableTypes = true,
+            --  compositeLiteralFields = true,
+            --  compositeLiteralTypes = true,
+            --  constantValues = true,
+            --  functionTypeParameters = true,
+            --  parameterNames = true,
+            --  rangeVariableTypes = true,
+            --},
+          }
+          require('lspconfig').bufls.setup{
             capabilities = capabilities,
             on_attach = on_attach,
           }
@@ -438,6 +452,7 @@ in
 
     extraLuaConfig = ''
       vim.opt.clipboard = 'unnamedplus'
+      vim.wo.wrap = false
       '';
   };
 
