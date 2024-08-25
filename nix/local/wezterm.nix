@@ -3,6 +3,7 @@
 {
   programs.wezterm = {
     enable = true;
+    enableZshIntegration = true;
     #package = pkgs.wezterm;
     #colorSchemes = {
     #};
@@ -119,8 +120,13 @@
           remote_address = 'ngrok-ec2',
           username = 'ubuntu',
           remote_wezterm_path = '/home/ubuntu/.nix-profile/bin/wezterm',
+          multiplexing = 'None', -- hopefully this opens in same terminal
         },
       }
+      --config.set_environment_variables = {
+      --    TERMINFO_DIRS = '/home/vimto/.nix-profile/share/terminfo',
+      --}
+      --config.term = "wezterm"
 
       return config
     '';

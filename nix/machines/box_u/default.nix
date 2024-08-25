@@ -23,7 +23,10 @@
   # source: https://github.com/nix-community/home-manager/issues/1439#issuecomment-1106208294
   home.activation = {
     linkDesktopApplications = {
-      after = [ "writeBoundary" "createXdgUserDirectories" ];
+      after = [
+        "writeBoundary"
+        "createXdgUserDirectories"
+      ];
       before = [ ];
       data = ''
         rm -rf ${config.xdg.dataHome}/"applications/home-manager"
@@ -35,9 +38,7 @@
 
   programs.zsh.initExtra = ''
     alias wezterm="flatpak run org.wezfurlong.wezterm"
-    '';
+  '';
 
-  home.packages = with pkgs; [
-    _1password-gui
-  ]
+  home.packages = with pkgs; [ _1password-gui ];
 }

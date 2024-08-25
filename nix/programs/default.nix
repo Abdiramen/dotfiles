@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ ... }:
 
 {
   imports = [
@@ -7,5 +7,5 @@
     ./neovim.nix
     ./tmux.nix
     ./fzf.nix
- ];
+  ];
 }

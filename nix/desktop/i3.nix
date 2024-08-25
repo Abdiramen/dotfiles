@@ -1,20 +1,26 @@
 { pkgs, lib, ... }:
 
-let 
+let
   mod = "Mod4";
-in {
+in
+{
   xsession.windowManager.i3 = {
     enable = true;
     config = {
       modifier = mod;
       terminal = "${pkgs.wezterm}/bin/wezterm";
 
-      fonts = ["DejaVu Sans Mono, FontAwesome 6"];
+      fonts = {
+        names = [
+          "DejaVu Sans Mono"
+          "FontAwesome 6"
+        ];
+      };
 
       keybindings = lib.mkOptionDefault {
         "${mod}+space" = "exec --no-startup-id ${pkgs.rofi}/bin/rofi -show combi -show-icons";
         "${mod}+x" = "exec sh -c '${pkgs.maim}/bin/maim -s | xclip -selection clipboard -t image/png'";
-        "${mod}+Shift+x" = "exec sh -c '${pkgs.i3lock}/bin/i3lock -c 222222 & sleep 5 && xset dpms force of'";
+        "${mod}+Shift+x" = "exec --no-startup-id xflock4";
 
         # Focus
         "${mod}+h" = "focus left";
@@ -30,12 +36,14 @@ in {
 
         # Browser
         "${mod}+b" = "exec firefox";
+
+        # Scratch pad
       };
 
       workspaceOutputAssign = [
         {
           workspace = "1";
-          output = "DP-3";
+          output = "DP-1";
         }
         {
           workspace = "2";

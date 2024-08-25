@@ -1,11 +1,11 @@
-{pkgs, ... }:
+{ pkgs, ... }:
 
 let
-  wiki_0_path = ~/vimwiki;
-  wiki_1_path = ~/git/interviews;
-  wiki_path_html = ~/vimwiki_html;
+  wiki_0_path = "~/vimwiki";
+  wiki_1_path = "~/git/interviews";
+  wiki_path_html = "~/vimwiki_html";
   # NOTE: make a package to share common paths or variables
-  bin = ~/bin;
+  bin = "~/bin"; # TODO: move into dotfiles project
   nvim_prettier = pkgs.vimUtils.buildVimPlugin {
     name = "nvim_prettier";
     src = pkgs.fetchFromGitHub {
@@ -16,6 +16,15 @@ let
     };
   };
 in
+#markmap_nvim = pkgs.vimUtils.buildVimPlugin {
+#  name = "markmap-nvim";
+#  src = pkgs.fetchFromGitHub {
+#    owner = "Zeioth";
+#    repo = "markmap.nvim";
+#    rev = "306728d1a60b3e5c88eedde310513a43f1c6d9de";
+#    sha256 = "sha256-+bAHpCxbUbxN80XSlQ7yb0g2c2R/u5xCV4L9jGe2vx8=";
+#  };
+#};
 {
   programs.neovim = {
     enable = true;
@@ -25,26 +34,26 @@ in
 
     # to find plugins run:
     # nix-env -f '<nixpkgs>' -qaP -A vimPlugins
-    plugins = with pkgs.vimPlugins;[
-      fugitive
-      gitgutter
-      vim-toml
-      vim-nix
+    plugins = [
+      pkgs.vimPlugins.fugitive
+      pkgs.vimPlugins.gitgutter
+      pkgs.vimPlugins.vim-toml
+      pkgs.vimPlugins.vim-nix
       # wiki, note taking productivity tools
       {
         # Personl wiki for vim
-        plugin = vimwiki;
+        plugin = pkgs.vimPlugins.vimwiki;
         config = ''
           let wiki_0 = {}
           let wiki_0.name = 'base'
-          let wiki_0.path = '${toString wiki_0_path}'
-          let wiki_0.path_html = '${toString wiki_path_html}'
+          let wiki_0.path = '${wiki_0_path}'
+          let wiki_0.path_html = '${wiki_path_html}'
           let wiki_0.auto_tags = 1
 
           let wiki_1 = {}
           let wiki_1.name = 'interviews'
-          let wiki_1.path = '${toString wiki_1_path}'
-          let wiki_1.path_html = '${toString wiki_path_html}'
+          let wiki_1.path = '${wiki_1_path}'
+          let wiki_1.path_html = '${wiki_path_html}'
           let wiki_1.auto_tags = 1
 
           let g:vimwiki_list = [wiki_0, wiki_1]
@@ -72,15 +81,15 @@ in
           endfunction
 
           "" vimwiki diary template
-          au BufNewFile ${toString wiki_0_path}/diary/*.wiki :silent 0r !${toString bin}/nvim/generate-vimwiki-diary-template.py ${toString wiki_0_path}
+          au BufNewFile ${wiki_0_path}/diary/*.wiki :silent 0r !${bin}/nvim/generate-vimwiki-diary-template.py ${wiki_0_path}
         '';
       }
-      mattn-calendar-vim
+      pkgs.vimPlugins.mattn-calendar-vim
 
       # neovim lua plugins
       ## Neovim file browser
       {
-        plugin = neo-tree-nvim;
+        plugin = pkgs.vimPlugins.neo-tree-nvim;
         type = "lua";
         config = ''
           require("neo-tree").setup{}
@@ -91,27 +100,27 @@ in
           -- vim.keymap.set('n', '<leader>gd', '<cmd>Neotree float reveal_file=<cfile> reveal_force_cwd<CR>', { desc = "Opens directory of file under curse in floating pane"})
           vim.keymap.set('n', '<leader>b', '<cmd>Neotree toggle show buffers right<CR>', {})
           vim.keymap.set('n', '<leader>s', '<cmd>Neotree float git_status<CR>', {})
-          '';
+        '';
       }
       {
-        plugin = plenary-nvim;
+        plugin = pkgs.vimPlugins.plenary-nvim;
         type = "lua";
       }
       {
-        plugin = nvim-web-devicons;
+        plugin = pkgs.vimPlugins.nvim-web-devicons;
         type = "lua";
       }
       {
-        plugin = nui-nvim;
+        plugin = pkgs.vimPlugins.nui-nvim;
         type = "lua";
       }
       ## Colorscheme
       {
-        plugin = catppuccin-nvim;
+        plugin = pkgs.vimPlugins.catppuccin-nvim;
         type = "lua";
         config = ''
           vim.cmd.colorscheme "catppuccin"
-          '';
+        '';
       }
       #{
       #  plugin = gruvbox-nvim;
@@ -143,7 +152,7 @@ in
       #}
       ## Statusline
       {
-        plugin = lualine-nvim;
+        plugin = pkgs.vimPlugins.lualine-nvim;
         type = "lua";
         config = ''
           require('lualine').setup{
@@ -155,7 +164,7 @@ in
       }
       {
         # Extendable fuzzy finder over lists aka vim-fzf replacement
-        plugin = telescope-nvim;
+        plugin = pkgs.vimPlugins.telescope-nvim;
         type = "lua";
         config = ''
           local builtin = require('telescope.builtin')
@@ -164,20 +173,29 @@ in
           vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
           vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
           vim.keymap.set('n', '<leader>fk', builtin.keymaps, {})
-          '';
+          vim.keymap.set('n', '<leader>fe', builtin.diagnostics, {})
+          vim.keymap.set('n', '<leader>fr', builtin.lsp_references, {})
+        '';
       }
       {
         # Diagnostics
-        plugin = trouble-nvim;
+        plugin = pkgs.vimPlugins.trouble-nvim;
         type = "lua";
         config = ''
           require('trouble').setup{}
-          '';
+        '';
+      }
+      {
+        plugin = pkgs.vimPlugins.csharpls-extended-lsp-nvim;
+        type = "lua";
+        config = ''
+          require('csharpls_extended')
+        '';
       }
       {
         # Config for Nvim LSP client (`:help lsp`)
         # see also `:help lsp-config`
-        plugin = nvim-lspconfig;
+        plugin = pkgs.vimPlugins.nvim-lspconfig;
         type = "lua";
         config = ''
           local group = vim.api.nvim_create_augroup("lsp_format_on_save", { clear = false })
@@ -197,6 +215,10 @@ in
             vim.keymap.set("n", "<leader>dk", vim.diagnostic.goto_prev)
             vim.keymap.set("n", "<leader>dl", "<cmd>Telescope diagnostics<cr>")
             vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename)
+            vim.keymap.set("n", "<leader>df", function()
+              vim.lsp.buf.format { async = true }
+            end, opts)
+            vim.keymap.set("n", "gr", vim.lsp.buf.references)
 
             ---- formatting
             --if client.supports_method("textDocument/formatting") then
@@ -244,6 +266,32 @@ in
             on_attach = on_attach,
           }
 
+          require('lspconfig').csharp_ls.setup {
+            capabilities = capabilities,
+            on_attach = on_attach,
+            cmd = { "${pkgs.csharp-ls}/bin/csharp-ls" },
+            handlers = {
+              ["textDocument/definition"] = require('csharpls_extended').handler,
+              ["textDocument/typeDefinition"] = require('csharpls_extended').handler,
+            },
+          }
+
+          -- require('lspconfig').omnisharp.setup {
+          --   cmd = {
+          --     "OmniSharp",
+          --     "--languageserver",
+          --     "--hostPID",
+          --     tostring(vim.fn.getpid())
+          --   },
+          --   capabilities = capabilities,
+          --   on_attach = on_attach,
+          --   handlers = { ["textDocument/definition"] = require("omnisharp_extended").handler },
+          --   RoslynExtensionsOptions = {
+          --     EnableAnalyzersSupport = true,
+          --     EnableImportCompletion = true,
+          --   },
+          -- }
+
           require('lspconfig').yamlls.setup{
             capabilities = capabilities,
             on_attach = on_attach,
@@ -267,13 +315,35 @@ in
               },
             },
           }
-          '';
+
+          require('lspconfig').gdscript.setup{
+            capabilities = capabilities,
+            on_attach = on_attach,
+          }
+
+          require('lspconfig').nixd.setup{
+            capabilities = capabilities,
+            on_attach = on_attach,
+            settings = {
+              nixd = {
+                formatting = {
+                   command = { "nixfmt" },
+                },
+                diagnostic = {
+                  suppress = {
+                    "sema-escaping-with"
+                  }
+                },
+              }, 
+            },
+          }
+        '';
       }
       ## nvim cmp and additions
       {
         # Completion Engine for nvim written in lua with full LSP support
         # (LSP autocomplete)
-        plugin = nvim-cmp;
+        plugin = pkgs.vimPlugins.nvim-cmp;
         type = "lua";
         config = ''
           -- Set up lspconfig.
@@ -282,7 +352,7 @@ in
           vim.opt.completeopt={"menu", "menuone", "noselect"}
           -- Set up nvim-cmp.
           local cmp = require'cmp'
-      
+
           cmp.setup({
             snippet = {
               expand = function(args)
@@ -307,7 +377,7 @@ in
               { name = 'buffer' },
             })
           })
-      
+
           -- Set configuration for specific filetype.
           cmp.setup.filetype('gitcommit', {
             sources = cmp.config.sources({
@@ -316,23 +386,23 @@ in
               { name = 'buffer' },
             })
           })      
-          '';
+        '';
       }
       {
-        plugin = cmp-buffer;
+        plugin = pkgs.vimPlugins.cmp-buffer;
         type = "lua";
       }
       {
-        plugin = cmp-path;
+        plugin = pkgs.vimPlugins.cmp-path;
         type = "lua";
       }
       {
-        plugin = cmp-nvim-lsp;
+        plugin = pkgs.vimPlugins.cmp-nvim-lsp;
         type = "lua";
       }
       {
         # Diagnostics, code actions, and more using neovim directly
-        plugin = null-ls-nvim;
+        plugin = pkgs.vimPlugins.null-ls-nvim;
         type = "lua";
         config = ''
           -- local null_ls = require("null-ls")
@@ -390,10 +460,62 @@ in
               timeout = 5000,
             }
           })
-          '';
+        '';
       }
-      luasnip
-      cmp_luasnip
+      #{
+      #  plugin = markmap_nvim;
+      #  type = "lua";
+      #  config = ''
+      #    opts = {
+      #      html_output = "/tmp/markmap.html", -- (default) Setting a empty string "" here means: [Current buffer path].html
+      #      hide_toolbar = false, -- (default)
+      #      grace_period = 3600000 -- (default) Stops markmap watch after 60 minutes. Set it to 0 to disable the grace_period.
+      #    }
+      #    require("markmap").setup(opts)
+      #    '';
+      #}
+      pkgs.vimPlugins.luasnip
+      pkgs.vimPlugins.cmp_luasnip
+      pkgs.vimPlugins.nvim-nio
+      {
+        plugin = (
+          pkgs.vimPlugins.nvim-treesitter.withPlugins (_: pkgs.vimPlugins.nvim-treesitter.allGrammars)
+        );
+        type = "lua";
+        config = ''
+          require("nvim-treesitter.configs").setup {
+            highlight = {
+              enable = true,
+            }
+          }
+        '';
+      }
+      {
+        plugin = pkgs.vimPlugins.neorg;
+        type = "lua";
+        config = ''
+          require("neorg").setup({
+            load = {
+              ["core.defaults"] = {},
+              ["core.keybinds"] = {
+                config = {
+                  default_keybinds = true,
+                },
+              },
+              ["core.concealer"] = {},
+              ["core.dirman"] = {
+                config = {
+                  workspaces = {
+                    notes = "~/notes",
+                  },
+                  default_workspace = "notes",
+                },
+              }
+            }
+          })
+        '';
+      }
+      pkgs.vimPlugins.nvim-treesitter-parsers.gdshader
     ];
     extraPackages = with pkgs; [
       # language servers
@@ -410,6 +532,16 @@ in
       #nodePackages_latest.prettier # needed for correct prettier formatting
       #yaml
       yaml-language-server
+      yarn
+
+      # csharp, this is going to be a wild ride
+      csharp-ls
+      omnisharp-roslyn
+      dotnetCorePackages.sdk_8_0_2xx
+
+      # nix lsp
+      nixd
+      nixfmt-rfc-style
     ];
 
     extraConfig = ''
@@ -425,9 +557,13 @@ in
       syntax on      
     '';
 
+    extraLuaPackages = luaPkgs: [
+      luaPkgs.pathlib-nvim
+      luaPkgs.lua-utils-nvim
+    ];
     extraLuaConfig = ''
       vim.opt.clipboard = 'unnamedplus'
-      '';
+      vim.wo.wrap = false
+    '';
   };
-
 }

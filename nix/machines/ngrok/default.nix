@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   imports = [
@@ -23,7 +23,5 @@
     "enable_sso" = "export NGROK_USE_SSO=true && direnv reload";
     "disable_sso" = "export NGROK_USE_SSO=false && direnv reload";
   };
-  home.packages = with pkgs; [
-    graphite-cli
-  ];
+  home.packages = with pkgs; [ graphite-cli ];
 }

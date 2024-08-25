@@ -1,7 +1,7 @@
-{pkgs, ... }:
+{ pkgs, ... }:
 
 let
-  bin = ~/bin;
+  bin = "~/bin"; # TODO: move to dotfile repo
 in
 {
   programs.dircolors = {
@@ -32,7 +32,7 @@ in
       "diary" = "nvim -c VimwikiDiaryIndex";
       "irb" = "irb --readline";
       "emacs" = "emacs --no-window-system";
-      "mkgit" = "${toString bin}/builders/mkgit.rb";
+      "mkgit" = "${bin}/builders/mkgit.rb";
       "pn" = "pnpm";
     };
     initExtra = ''
@@ -45,13 +45,13 @@ in
         source <(direnv hook zsh)
       fi
     '';
-    plugins = with pkgs; [
+    plugins = [
       {
-	      name = "zsh-vi-mode";
-	      src  = pkgs.fetchFromGitHub {
-          owner  = "jeffreytse";
-          repo   = "zsh-vi-mode";
-          rev    = "v0.8.4";
+        name = "zsh-vi-mode";
+        src = pkgs.fetchFromGitHub {
+          owner = "jeffreytse";
+          repo = "zsh-vi-mode";
+          rev = "v0.8.4";
           sha256 = "0a1rvc03rl66v8rgzvxpq0vw55hxn5b9dkmhdqghvi2f4dvi8fzx";
         };
       }
