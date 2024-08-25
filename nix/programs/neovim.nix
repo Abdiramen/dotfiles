@@ -329,11 +329,6 @@ in
                 formatting = {
                    command = { "nixfmt" },
                 },
-                diagnostic = {
-                  suppress = {
-                    "sema-escaping-with"
-                  }
-                },
               }, 
             },
           }
