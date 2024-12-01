@@ -83,10 +83,7 @@
   imports = [
     ../../modules
   ];
-  cli_tools.enable = true;
-  direnv.enable = true;
   game_dev.enable = true;
-  fzf.enable = true;
   i3.enable = true;
   rofi.enable = true;
   wezterm-local = {
@@ -97,8 +94,5 @@
     };
   };
   latex.enable = true;
-  zsh.enable = true;
-  neovim.enable = true;
-  tmux.enable = true;
   apps.enable = true;
 }
