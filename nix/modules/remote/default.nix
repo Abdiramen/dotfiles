@@ -5,7 +5,7 @@
   options = {
     wezterm-remote.enable = lib.mkEnableOption "enable remote wezterm";
   };
-  config = lib.mkIf config.wezterm-local.enable {
+  config = lib.mkIf config.wezterm-remote.enable {
     programs.wezterm = {
       enable = true;
       extraConfig = ''
