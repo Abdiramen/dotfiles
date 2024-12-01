@@ -1,11 +1,12 @@
-{ pkgs, ... }:
+{ ... }:
 
 {
   imports = [
+    ./cli_tools.nix
     ./direnv.nix
-    ./zsh.nix
+    ./fzf.nix
     ./neovim.nix
     ./tmux.nix
-    ./fzf.nix
- ];
+    ./zsh.nix
+  ];
 }
