@@ -83,6 +83,7 @@
   imports = [
     ../../modules
   ];
+  animation.enable = true;
   game_dev.enable = true;
   i3.enable = true;
   rofi.enable = true;
