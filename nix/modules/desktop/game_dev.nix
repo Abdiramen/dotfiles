@@ -10,7 +10,7 @@
   };
   config = lib.mkIf config.game_dev.enable {
     home.packages = with pkgs; [
-      aseprite
+      #aseprite # might also make this required here
       godot_4
       itch
     ];
