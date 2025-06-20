@@ -14,6 +14,7 @@
       };
     };
   };
+  # why did I add this to the wezterm module this belongs in desktop?
   config = lib.mkIf config.wezterm-local.enable {
     services.random-background = lib.mkIf config.wezterm-local.backgrounds.enable {
       enable = true;
@@ -144,7 +145,13 @@
             remote_address = 'ngrok-ec2',
             username = 'ubuntu',
             remote_wezterm_path = '/home/ubuntu/.nix-profile/bin/wezterm',
-            multiplexing = 'None', -- hopefully this opens in same terminal
+            --multiplexing = 'None', -- hopefully this opens in same terminal
+          },
+          {
+            name = 'devbox',
+            remote_address = 'devbox',
+            username = 'oz',
+            remote_wezterm_path = '/home/oz/.nix-profile/bin/wezterm',
           },
         }
         --config.set_environment_variables = {

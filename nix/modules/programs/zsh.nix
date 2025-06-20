@@ -39,7 +39,7 @@
         "emacs" = "emacs --no-window-system";
         "pn" = "pnpm";
       };
-      initExtra = ''
+      initContent = ''
         # turning off translations for Stardew Valley
         export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
 

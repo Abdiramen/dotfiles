@@ -1,4 +1,8 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  ...
+}:
 {
 
   options = {
@@ -6,6 +10,7 @@
   };
   # texlive, latex, xatex, etc
   config = lib.mkIf config.latex.enable {
+    fonts.fontconfig.enable = true;
     programs.texlive = {
       enable = true;
       extraPackages = tpkgs: {
@@ -32,6 +37,8 @@
           pdftexcmds
           infwarerr
           greek-fontenc
+          eso-pic
+          fontawesome5
           ;
       };
     };

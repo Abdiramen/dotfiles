@@ -12,6 +12,9 @@
     home.packages = with pkgs; [
       _1password-gui
       discord
+      zoom-us
     ];
+    # need to set this later for SSO
+    # xdg-mime default Zoom.desktop x-scheme-handler/zoommtg
   };
 }

@@ -62,6 +62,7 @@ in
     i3.enable = lib.mkEnableOption "enables i3 configs";
   };
   config = lib.mkIf config.i3.enable {
+    #services.flameshot.enable = true;
     xsession.windowManager.i3 = {
       enable = true;
       config = {
@@ -78,7 +79,9 @@ in
 
         keybindings = lib.mkOptionDefault {
           "${mod}+space" = "exec --no-startup-id ${pkgs.rofi}/bin/rofi -show combi -show-icons";
-          "${mod}+x" = "exec sh -c '${pkgs.maim}/bin/maim -s | xclip -selection clipboard -t image/png'";
+          #"${mod}+x" = "exec sh -c '${pkgs.maim}/bin/maim -s | xclip -selection clipboard -t image/png'";
+          "${mod}+Print" = "exec sh -c '${pkgs.flameshot}/bin/flameshot full -c -p ${config.home.homeDirectory}/Pictures/Screenshots'";
+          "${mod}+Shift+Print" = "exec sh -c '${pkgs.flameshot}/bin/flameshot gui -p ${config.home.homeDirectory}/Pictures/Screenshots'";
           "${mod}+Shift+x" = "exec --no-startup-id xflock4";
 
           # Focus
