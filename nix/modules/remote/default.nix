@@ -105,6 +105,10 @@
               action = act.ActivatePaneDirection 'Right',
             },
           },
+          set_environment_variables = {
+            TERMINFO_DIRS = '/home/oz/.nix-profile/share/terminfo',
+          },
+          term = "wezterm",
         }
       '';
     };
