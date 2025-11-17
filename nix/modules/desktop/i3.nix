@@ -54,7 +54,7 @@ let
     format = " $timestamp.datetime(f:'%a %d/%m %R') "
     [[block.click]]
     button = "left"
-    cmd = "${pkgs.firefox}/bin/firefox https://calendar.google.com/calendar/u/0/r"
+    cmd = "${pkgs.librewolf}/bin/librewolf https://calendar.google.com/calendar/u/0/r"
   '';
 in
 {
@@ -97,7 +97,7 @@ in
           "${mod}+Shift+l" = "move right";
 
           # Browser
-          "${mod}+b" = "exec firefox";
+          "${mod}+b" = "exec ${pkgs.librewolf}/bin/librewolf";
 
           # Scratch pad
         };

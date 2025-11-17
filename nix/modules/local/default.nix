@@ -153,6 +153,12 @@
             username = 'oz',
             remote_wezterm_path = '/home/oz/.nix-profile/bin/wezterm',
           },
+          {
+            name = 'devbox-next',
+            remote_address = 'devbox-next',
+            username = 'oz',
+            remote_wezterm_path = '/home/oz/.nix-profile/bin/wezterm',
+          },
         }
         --config.set_environment_variables = {
         --    TERMINFO_DIRS = '/home/vimto/.nix-profile/share/terminfo',

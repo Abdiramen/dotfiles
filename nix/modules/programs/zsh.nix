@@ -30,7 +30,9 @@
       };
       defaultKeymap = "viins";
       dotDir = "${config.home.homeDirectory}/.config/zsh";
-
+      history = {
+        path = "${config.home.homeDirectory}/.zsh_history";
+      };
       shellAliases = {
         ls = "ls --color";
         "vimwiki" = "nvim -c VimwikiIndex";

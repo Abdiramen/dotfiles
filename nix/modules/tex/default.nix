@@ -39,6 +39,7 @@
           greek-fontenc
           eso-pic
           fontawesome5
+          colortbl
           ;
       };
     };

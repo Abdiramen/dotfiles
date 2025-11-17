@@ -2,14 +2,17 @@ local group = vim.api.nvim_create_augroup("lsp_format_on_save", { clear = false 
 local event = "BufWritePre"
 local async = event == "BufWritePost"
 
+-- @param client vim.lsp.Client
+-- @param bufnr
 local on_attach = function(client, bufnr)
   vim.keymap.set("n", "K", vim.lsp.buf.hover)
   vim.keymap.set("n", "gd", vim.lsp.buf.definition)
   vim.keymap.set("n", "gD", vim.lsp.buf.declaration)
   vim.keymap.set("n", "<leader>gt", vim.lsp.buf.type_definition)
+  vim.keymap.set("n", "gi", vim.lsp.buf.implementation)
   vim.keymap.set("n", "<leader>dl", "<cmd>Telescope diagnostics<cr>")
-  vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename)
-  vim.keymap.set("n", "<leader>df", function() vim.lsp.buf.format { async = true } end, opts)
+  vim.keymap.set("n", "<leader>r", function() vim.lsp.buf.rename(nil, { bufnr = bufnr }) end)
+  vim.keymap.set("n", "<leader>df", function() vim.lsp.buf.format { async = true, bufnr = bufnr } end)
   vim.keymap.set("n", "gr", vim.lsp.buf.references)
   vim.diagnostic.config({ jump = { float = true } })
 end
