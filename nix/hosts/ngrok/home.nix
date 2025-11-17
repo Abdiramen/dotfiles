@@ -21,10 +21,10 @@
     initExtra = ''
       # see https://nix-community.github.io/home-manager/index.html#ch-installation
       #. "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
-      exec ~/.nix-profile/bin/zsh
+      exec "''${HOME}/.nix-profile/bin/zsh"
     '';
     profileExtra = ''
-      PATH=~/.nix-profile/bin:$PATH
+      PATH="''${HOME}/.nix-profile/bin:$PATH"
     '';
   };
 
