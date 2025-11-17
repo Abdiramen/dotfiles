@@ -3,96 +3,42 @@ local event = "BufWritePre"
 local async = event == "BufWritePost"
 
 local on_attach = function(client, bufnr)
-  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-
   vim.keymap.set("n", "K", vim.lsp.buf.hover)
   vim.keymap.set("n", "gd", vim.lsp.buf.definition)
   vim.keymap.set("n", "gD", vim.lsp.buf.declaration)
   vim.keymap.set("n", "<leader>gt", vim.lsp.buf.type_definition)
-  -- vim.keymap.set("n", "gi", vim.lsp.buf.implementation)
   vim.keymap.set("n", "<leader>dl", "<cmd>Telescope diagnostics<cr>")
   vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename)
   vim.keymap.set("n", "<leader>df", function() vim.lsp.buf.format { async = true } end, opts)
   vim.keymap.set("n", "gr", vim.lsp.buf.references)
-
-  --vim.keymap.set("n", "<leader>dj", vim.diagnostic.jump({ count = 1, float = true }) end)
-  --vim.keymap.set("n", "<leader>dk", vim.diagnostic.jump, { count = -1, float = true })
-  vim.diagnostic.config({ jump = {float = true}})
-
-
-  ---- formatting
-  --if client.supports_method("textDocument/formatting") then
-  --  vim.keymap.set("n", "<Leader>f", function()
-  --    vim.lsp.buf.format({ bufnr = vim.api.nvim_get_current_buf() })
-  --  end, { buffer = bufnr, desc = "[lsp] format" })
-
-  --  vim.keymap.set("x", "<Leader>f", function()
-  --    vim.lsp.buf.format({ bufnr = vim.api.nvim_get_current_buf() })
-  --  end, { buffer = bufnr, desc = "[lsp] format" })
-
-  --  -- format on save
-  --  vim.api.nvim_create_autocmd("BufWritePre", {
-  --    buffer = bufnr,
-  --    group = group,
-  --    callback = function()
-  --      vim.lsp.buf.format({ bufnr = bufnr, async = async })
-  --    end
-  --  })
-  --end
+  vim.diagnostic.config({ jump = { float = true } })
 end
 
-require('lspconfig').gopls.setup {
-  capabilities = capabilities,
-  on_attach = on_attach,
-}
-require('lspconfig').rust_analyzer.setup {
-  capabilities = capabilities,
-  on_attach = on_attach,
-}
-require('lspconfig').solargraph.setup {
-  capabilities = capabilities,
-  on_attach = on_attach,
-}
-require('lspconfig').ts_ls.setup {
-  capabilities = capabilities,
+vim.lsp.config("*", {
+  on_attach = function()
+    on_attach()
+  end,
+})
+vim.lsp.enable("gopls")
+vim.lsp.enable("rust_analyzer")
+vim.lsp.enable("solargraph")
+vim.lsp.config("ts_ls", {
   on_attach = on_attach,
   filetypes = { "typescript", "typescriptreact", "typescript.tsx" },
   cmd = { "typescript-language-server", "--stdio" }
-}
-require('lspconfig').buf_ls.setup {
-  capabilities = capabilities,
-  on_attach = on_attach,
-}
-
-require('lspconfig').csharp_ls.setup {
-  capabilities = capabilities,
+})
+vim.lsp.enable("ts_ls")
+vim.lsp.enable("buf_ls")
+vim.lsp.config("csharp_ls", {
   on_attach = on_attach,
   cmd = { string.format("%s/bin/csharp-ls", csharp_ls) },
   handlers = {
     ["textDocument/definition"] = require('csharpls_extended').handler,
     ["textDocument/typeDefinition"] = require('csharpls_extended').handler,
   },
-}
-
--- require('lspconfig').omnisharp.setup {
---   cmd = {
---     "OmniSharp",
---     "--languageserver",
---     "--hostPID",
---     tostring(vim.fn.getpid())
---   },
---   capabilities = capabilities,
---   on_attach = on_attach,
---   handlers = { ["textDocument/definition"] = require("omnisharp_extended").handler },
---   RoslynExtensionsOptions = {
---     EnableAnalyzersSupport = true,
---     EnableImportCompletion = true,
---   },
--- }
-
-require('lspconfig').yamlls.setup {
-  capabilities = capabilities,
+})
+vim.lsp.enable("csharp_ls")
+vim.lsp.config("yamlls", {
   on_attach = on_attach,
   settings = {
     yaml = {
@@ -107,21 +53,24 @@ require('lspconfig').yamlls.setup {
         ["http://json.schemastore.org/chart"] = "Chart.{yml,yaml}",
         ["https://json.schemastore.org/dependabot-v2"] = ".github/dependabot.{yml,yaml}",
         ["https://json.schemastore.org/gitlab-ci"] = "*gitlab-ci*.{yml,yaml}",
-        ["https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.1/schema.json"] = "*api*.{yml,yaml}",
-        ["https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json"] = "*docker-compose*.{yml,yaml}",
-        ["https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json"] = "*flow*.{yml,yaml}",
+        ["https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.1/schema.json"] =
+        "*api*.{yml,yaml}",
+        ["https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json"] =
+        "*docker-compose*.{yml,yaml}",
+        ["https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json"] =
+        "*flow*.{yml,yaml}",
       },
     },
   },
-}
+})
+vim.lsp.enable("yamlls")
 
-require('lspconfig').gdscript.setup {
-  capabilities = capabilities,
+vim.lsp.config("gdscript", {
   on_attach = on_attach,
-}
+})
+vim.lsp.enable("gdscript")
 
-require('lspconfig').nixd.setup {
-  capabilities = capabilities,
+vim.lsp.config("nixd", {
   on_attach = on_attach,
   settings = {
     nixd = {
@@ -130,10 +79,10 @@ require('lspconfig').nixd.setup {
       },
     },
   },
-}
+})
+vim.lsp.enable("nixd")
 
-require('lspconfig').lua_ls.setup {
-  capabilities = capabilities,
+vim.lsp.config("lua_ls", {
   on_attach = on_attach,
   on_init = function(client)
     if client.workspace_folders then
@@ -170,10 +119,7 @@ require('lspconfig').lua_ls.setup {
       },
     },
   },
-}
-
-require('lspconfig').texlab.setup {
-  capabilities = capabilities,
-  on_attach = on_attach,
-
-}
+})
+vim.lsp.enable("lua_ls")
+vim.lsp.enable("texlab")
+vim.lsp.enable("clangd")

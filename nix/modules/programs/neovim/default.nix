@@ -12,7 +12,7 @@ in
     neovim.enable = lib.mkEnableOption "enables neovim configs";
     neorg.config = mkOption {
       type = types.str;
-      default = (builtins.readFile ./lua/neorg.lua);
+      default = (builtins.readFile ./lua/plugins/neorg.lua);
     };
     neorg.authors = mkOption {
       type = types.str;
@@ -42,15 +42,7 @@ in
         {
           plugin = pkgs.vimPlugins.neo-tree-nvim;
           type = "lua";
-          config = (builtins.readFile ./lua/neo_tree_nvim.lua);
-        }
-        ## Colorscheme
-        {
-          plugin = pkgs.vimPlugins.catppuccin-nvim;
-          type = "lua";
-          config = ''
-            vim.cmd.colorscheme "catppuccin"
-          '';
+          config = (builtins.readFile ./lua/plugins/neo_tree_nvim.lua);
         }
         ## Statusline
         {
@@ -68,7 +60,7 @@ in
           # Extendable fuzzy finder over lists aka vim-fzf replacement
           plugin = pkgs.vimPlugins.telescope-nvim;
           type = "lua";
-          config = (builtins.readFile ./lua/telescope.lua);
+          config = (builtins.readFile ./lua/plugins/telescope.lua);
         }
         {
           # Diagnostics
@@ -90,7 +82,7 @@ in
           # see also `:help lsp-config`
           plugin = pkgs.vimPlugins.nvim-lspconfig;
           type = "lua";
-          config = (builtins.readFile ./lua/lspconfig.lua);
+          config = (builtins.readFile ./lua/plugins/lspconfig.lua);
         }
         ## nvim cmp and additions
         {
@@ -98,7 +90,27 @@ in
           # (LSP autocomplete)
           plugin = pkgs.vimPlugins.nvim-cmp;
           type = "lua";
-          config = (builtins.readFile ./lua/nvim_cmp.lua);
+          config = (builtins.readFile ./lua/plugins/nvim_cmp.lua);
+        }
+        ## Colorscheme
+        {
+          plugin = pkgs.vimPlugins.catppuccin-nvim;
+          type = "lua";
+          config = ''
+             vim.cmd.colorscheme "catppuccin"
+          '';
+        }
+        {
+          plugin = pkgs.vimPlugins.rose-pine;
+          type = "lua";
+          config = ''
+            require("rose-pine").setup({
+              --highlight_groups = {
+              --    ["@lsp.type.comment.cpp"] = { link = "@comment" },
+              --}
+            })
+            --vim.cmd.colorscheme "rose-pine-moon"
+          '';
         }
         pkgs.vimPlugins.cmp-buffer
         pkgs.vimPlugins.cmp-path
@@ -175,6 +187,10 @@ in
 
         # LaTeX lsp
         texlab
+
+        # clang (c++, c)
+        clang-tools
+        #llvmPackages_20.clang-unwrapped
       ];
 
       extraConfig = ''
@@ -187,19 +203,14 @@ in
         set splitright
         let mapleader = " "
         filetype plugin on
-        syntax on      
       '';
+      #"syntax on
 
       extraLuaPackages = luaPkgs: [
         luaPkgs.pathlib-nvim
         luaPkgs.lua-utils-nvim
       ];
-      extraLuaConfig = ''
-        vim.opt.clipboard = 'unnamedplus'
-        vim.wo.wrap = false
-        local csharp_ls = "${pkgs.csharp-ls}"
-        local authors = "${config.neorg.authors}"
-      '';
+      extraLuaConfig = builtins.readFile (pkgs.replaceVars ./lua/init.lua { csharp-ls = pkgs.csharp-ls; authors = config.neorg.authors;});
     };
   };
 }
