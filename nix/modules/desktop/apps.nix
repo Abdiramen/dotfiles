@@ -14,6 +14,7 @@
       discord
       zoom-us
       freecad
+      readest
     ];
     # need to set this later for SSO
     # xdg-mime default Zoom.desktop x-scheme-handler/zoommtg

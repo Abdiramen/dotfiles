@@ -104,12 +104,19 @@ in
 
         workspaceOutputAssign = [
           {
+            # BenQ 27" old
             workspace = "1";
             output = "DP-1";
           }
+          #{
+          #  # Dell, disconnected
+          #  workspace = "2";
+          #  output = "HDMI-1";
+          #}
           {
+            # BenQ 27" New
             workspace = "2";
-            output = "HDMI-1";
+            output = "DP-3";
           }
         ];
 

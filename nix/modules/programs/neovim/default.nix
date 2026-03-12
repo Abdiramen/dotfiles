@@ -5,11 +5,16 @@
   ...
 }:
 let
-  inherit (lib) types mkOption;
+  inherit (lib)
+    types
+    mkOption
+    mkIf
+    mkEnableOption
+    ;
 in
 {
   options = {
-    neovim.enable = lib.mkEnableOption "enables neovim configs";
+    neovim.enable = mkEnableOption "enables neovim configs";
     neorg.config = mkOption {
       type = types.str;
       default = (builtins.readFile ./lua/plugins/neorg.lua);
@@ -19,7 +24,7 @@ in
       default = "Abdirahman A. Osman";
     };
   };
-  config = lib.mkIf config.neovim.enable {
+  config = mkIf config.neovim.enable {
     programs.neovim = {
       enable = true;
       viAlias = true;
@@ -29,8 +34,8 @@ in
       # to find plugins run:
       # nix-env -f '<nixpkgs>' -qaP -A vimPlugins
       plugins = [
-        pkgs.vimPlugins.fugitive
-        pkgs.vimPlugins.gitgutter
+        pkgs.vimPlugins.vim-fugitive
+        pkgs.vimPlugins.vim-gitgutter
         pkgs.vimPlugins.vim-toml
         pkgs.vimPlugins.vim-nix
         pkgs.vimPlugins.mattn-calendar-vim
@@ -82,7 +87,17 @@ in
           # see also `:help lsp-config`
           plugin = pkgs.vimPlugins.nvim-lspconfig;
           type = "lua";
-          config = (builtins.readFile ./lua/plugins/lspconfig.lua);
+          #config = (builtins.readFile ./lua/plugins/lspconfig.lua);
+          #config = (builtins.readFile (pkgs.replaceVars ./lua/plugins/lspconfig.lua {avr-gpp = pkgs.pkgsCross.avr.buildPackages.gcc; glibc = pkgsi686Linux.glibc; }));
+          config = (
+            builtins.readFile (
+              pkgs.replaceVars ./lua/plugins/lspconfig.lua {
+                #avr-gpp = pkgs.pkgsCross.avr.buildPackages.gcc;
+                # provide missing gnu/stubs-32.h for clangd
+                #i686 = pkgs.glibc_multi.dev;
+              }
+            )
+          );
         }
         ## nvim cmp and additions
         {
@@ -97,7 +112,7 @@ in
           plugin = pkgs.vimPlugins.catppuccin-nvim;
           type = "lua";
           config = ''
-             vim.cmd.colorscheme "catppuccin"
+            vim.cmd.colorscheme "catppuccin"
           '';
         }
         {
@@ -141,13 +156,7 @@ in
             )
           );
           type = "lua";
-          config = ''
-            require("nvim-treesitter.configs").setup {
-              highlight = {
-                enable = true,
-              }
-            }
-          '';
+          config = (builtins.readFile ./lua/plugins/treesitter.lua);
         }
         {
           plugin = pkgs.vimPlugins.neorg;
@@ -176,7 +185,7 @@ in
         # csharp, this is going to be a wild ride
         csharp-ls
         omnisharp-roslyn
-        dotnetCorePackages.sdk_8_0_3xx
+        dotnetCorePackages.sdk_8_0_4xx
 
         # nix lsp
         nixd
@@ -191,26 +200,25 @@ in
         # clang (c++, c)
         clang-tools
         #llvmPackages_20.clang-unwrapped
-      ];
 
-      extraConfig = ''
-        " Settings
-        set visualbell
-        set cursorline
-        set tabstop=2 shiftwidth=2 expandtab
-        set number relativenumber
-        set hlsearch
-        set splitright
-        let mapleader = " "
-        filetype plugin on
-      '';
-      #"syntax on
+        # arduino
+        arduino-language-server
+        arduino
+
+        # zig
+        zls
+      ];
 
       extraLuaPackages = luaPkgs: [
         luaPkgs.pathlib-nvim
         luaPkgs.lua-utils-nvim
       ];
-      extraLuaConfig = builtins.readFile (pkgs.replaceVars ./lua/init.lua { csharp-ls = pkgs.csharp-ls; authors = config.neorg.authors;});
+      initLua = builtins.readFile (
+        pkgs.replaceVars ./lua/init.lua {
+          csharp-ls = pkgs.csharp-ls;
+          authors = config.neorg.authors;
+        }
+      );
     };
   };
 }

@@ -1,5 +1,15 @@
 vim.opt.clipboard = 'unnamedplus'
+vim.g.mapleader = " "
 vim.wo.wrap = false
+vim.o.visualbell = true
+vim.o.cursorline = true
+vim.o.tabstop = 2
+vim.o.shiftwidth = 2
+vim.o.expandtab = true
+vim.o.number = true
+vim.o.relativenumber = true
+vim.o.hlsearch = true
+vim.o.splitright = true
 local csharp_ls = "@csharp-ls@"
 local authors = "@authors@"
 

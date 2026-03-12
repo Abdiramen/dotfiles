@@ -7,6 +7,7 @@
     ./fzf.nix
     ./neovim
     ./tmux.nix
+    ./wezterm
     ./zsh.nix
   ];
 }

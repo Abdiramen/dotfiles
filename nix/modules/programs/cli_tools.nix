@@ -22,7 +22,7 @@
       yq-go
       # binary calculator
       bc
-      ngrok
+      signal-desktop
     ];
   };
 }

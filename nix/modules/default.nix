@@ -3,9 +3,7 @@
 {
   imports = [
     ./desktop
-    ./local
     ./programs
-    ./remote
     ./tex
   ];
 

@@ -126,3 +126,5 @@ vim.lsp.config("lua_ls", {
 vim.lsp.enable("lua_ls")
 vim.lsp.enable("texlab")
 vim.lsp.enable("clangd")
+vim.lsp.enable("arduino-language-server")
+vim.lsp.enable("zls") -- zig lsp
